@@ -1,0 +1,20 @@
+job_name: grok-composer-2.5-deepswe
+n_concurrent_trials: 4
+
+environment:
+  type: docker
+
+agents:
+  - import_path: agents.grok_build:GrokBuild
+    model_name: grok/grok-composer-2.5-fast
+    env:
+      XAI_API_KEY: ${XAI_API_KEY}
+    kwargs:
+      max_turns: 200
+      no_plan: true
+      disable_web_search: true
+
+datasets:
+  - path: tasks
+    n_tasks: 10
+    sample_seed: 0

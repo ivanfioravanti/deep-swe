@@ -34,41 +34,51 @@ export OPENAI_API_KEY=...
 pier run -p deep-swe/tasks --agent mini-swe-agent --model openai/gpt-5.5
 ```
 
-### Composer 2.5 via Cursor CLI
+### Composer 2.5 via Grok Build CLI
 
-The published [DeepSWE leaderboard](https://deepswe.datacurve.ai/) uses `mini-swe-agent` for cross-model consistency. To benchmark Cursor's own agent stack with Composer 2.5, use Pier's `cursor-cli` agent (available on Pier `main`; not yet in the latest PyPI release):
+The published [DeepSWE leaderboard](https://deepswe.datacurve.ai/) uses `mini-swe-agent` for cross-model consistency. This branch adds a Pier adapter for [Grok Build CLI](https://x.ai/news/grok-build-cli) that routes to Composer 2.5 through Grok's `grok-composer-2.5-fast` model (Cursor agent harness behind the scenes).
 
 ```bash
 git clone https://github.com/ivanfioravanti/deep-swe
 cd deep-swe
 git checkout composer-2.5-support
 
-uv tool install git+https://github.com/datacurve-ai/pier.git
+uv tool install datacurve-pier
 
 cp .env.example .env
-# Add your key from https://cursor.com/dashboard/api
+# Add XAI_API_KEY from https://console.x.ai/
+# Or set GROK_AUTH_JSON to the contents of ~/.grok/auth.json
 
 # Smoke test: one task
-pier run -p tasks/cliffy-config-file-parsing \
-  --agent cursor-cli \
-  --model cursor/composer-2.5 \
+PYTHONPATH=. pier run -p tasks/cliffy-config-file-parsing \
+  --agent-import-path agents.grok_build:GrokBuild \
+  --model grok/grok-composer-2.5-fast \
   --env docker \
   --env-file .env
 
 # Deterministic 10-task subset
-pier run -p tasks \
-  --agent cursor-cli \
-  --model cursor/composer-2.5 \
+PYTHONPATH=. pier run -p tasks \
+  --agent-import-path agents.grok_build:GrokBuild \
+  --model grok/grok-composer-2.5-fast \
   --n-tasks 10 \
   --sample-seed 0 \
   --env docker \
   --env-file .env
 
 # Or use the checked-in job config
-pier run -c examples/composer-2.5-job.yaml --env-file .env
+PYTHONPATH=. pier run -c examples/grok-composer-2.5-job.yaml --env-file .env
 ```
 
-For a full 113-task run in parallel, switch `--env docker` to `--env modal` and configure Modal credentials. Results land in `jobs/`; inspect them with `pier view jobs/<job-name>`.
+Use `grok/grok-build` instead of `grok/grok-composer-2.5-fast` to benchmark Grok's native coding agent. For a full 113-task run in parallel, switch `--env docker` to `--env modal`. Results land in `jobs/`; inspect them with `pier view jobs/<job-name>`.
+
+#### Alternative: Cursor CLI
+
+You can also run Composer 2.5 directly through Pier's `cursor-cli` agent (requires Pier `main` from GitHub):
+
+```bash
+uv tool install git+https://github.com/datacurve-ai/pier.git
+pier run -c examples/composer-2.5-job.yaml --env-file .env
+```
 
 ## What is Pier
 
@@ -78,7 +88,7 @@ Pier also adds more complete trajectory metadata, a better trajectory viewer, an
 
 ### Agents and models
 
-`mini-swe-agent` is model-agnostic. Pier also drives `claude-code`, `codex`, `cursor-cli`, `gemini-cli`, and `opencode` directly. Pass `--env modal` to run in parallel sandboxes on Modal.
+`mini-swe-agent` is model-agnostic. Pier also drives `claude-code`, `codex`, `cursor-cli`, `gemini-cli`, and `opencode` directly. This fork adds a custom `grok-build` agent (`agents/grok_build.py`) for Grok Build CLI with Composer 2.5 routing. Pass `--env modal` to run in parallel sandboxes on Modal.
 
 ### Subsets and single tasks
 

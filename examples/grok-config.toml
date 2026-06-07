@@ -1,0 +1,5 @@
+[models]
+default = "grok-composer-2.5-fast"
+
+[cli]
+auto_update = false
