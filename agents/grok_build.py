@@ -54,18 +54,15 @@ class GrokBuild(BaseInstalledAgent):
         return 'export PATH="$HOME/.local/bin:$PATH"; grok version'
 
     def network_allowlist(self) -> NetworkAllowlist:
+        # Squid dstdomain ACLs reject overlapping entries (e.g. grok.com + .grok.com).
+        # Use parent-domain wildcards only; they cover the apex and subdomains.
         return allowlist_from_urls(
             [],
             default_domains=[
-                "grok.com",
                 ".grok.com",
-                "x.ai",
-                "cli-chat-proxy.grok.com",
-                "cursor.com",
-                "api.cursor.sh",
-                "api2.cursor.sh",
-                "api3.cursor.sh",
                 ".cursor.sh",
+                "cursor.com",
+                "x.ai",
             ],
         )
 
