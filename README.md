@@ -65,11 +65,15 @@ PYTHONPATH=. pier run -p tasks \
   --env docker \
   --env-file .env
 
-# Or use the checked-in job config
+# 10-task subset (checked-in job config)
 PYTHONPATH=. pier run -c examples/grok-composer-2.5-job.yaml --env-file .env
+
+# Full 113-task run on Modal (same task corpus as the leaderboard)
+modal token new
+PYTHONPATH=. pier run -c examples/grok-composer-2.5-full-job.yaml --env-file .env
 ```
 
-Use `grok/grok-build` instead of `grok/grok-composer-2.5-fast` to benchmark Grok's native coding agent. For a full 113-task run in parallel, switch `--env docker` to `--env modal`. Results land in `jobs/`; inspect them with `pier view jobs/<job-name>`.
+Use `grok/grok-build` instead of `grok/grok-composer-2.5-fast` to benchmark Grok's native coding agent. This uses the Grok Build harness, not `mini-swe-agent`, so scores are not directly comparable to published leaderboard numbers. Results land in `jobs/`; inspect them with `pier view jobs/<job-name>`.
 
 #### Alternative: Cursor CLI
 

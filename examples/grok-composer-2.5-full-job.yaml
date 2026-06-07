@@ -1,0 +1,20 @@
+job_name: grok-composer-2.5-full-113
+n_concurrent_trials: 4
+n_attempts: 1
+
+environment:
+  type: modal
+
+agents:
+  - import_path: agents.grok_build:GrokBuild
+    model_name: grok/grok-composer-2.5-fast
+    env:
+      GROK_AUTH_JSON: ${GROK_AUTH_JSON}
+      XAI_API_KEY: ${XAI_API_KEY}
+    kwargs:
+      max_turns: 200
+      no_plan: true
+      disable_web_search: true
+
+datasets:
+  - path: tasks
