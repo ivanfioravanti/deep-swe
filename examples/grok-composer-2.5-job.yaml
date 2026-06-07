@@ -8,6 +8,7 @@ agents:
   - import_path: agents.grok_build:GrokBuild
     model_name: grok/grok-composer-2.5-fast
     env:
+      GROK_AUTH_JSON: ${GROK_AUTH_JSON}
       XAI_API_KEY: ${XAI_API_KEY}
     kwargs:
       max_turns: 200
