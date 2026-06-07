@@ -1,0 +1,16 @@
+job_name: composer-2.5-deepswe
+n_concurrent_trials: 4
+
+environment:
+  type: docker
+
+agents:
+  - name: cursor-cli
+    model_name: cursor/composer-2.5
+    env:
+      CURSOR_API_KEY: ${CURSOR_API_KEY}
+
+datasets:
+  - path: tasks
+    n_tasks: 10
+    sample_seed: 0
