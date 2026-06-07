@@ -3,7 +3,7 @@ n_concurrent_trials: 4
 n_attempts: 1
 
 environment:
-  type: modal
+  type: docker
 
 agents:
   - import_path: agents.grok_build:GrokBuild

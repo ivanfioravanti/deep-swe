@@ -68,8 +68,7 @@ PYTHONPATH=. pier run -p tasks \
 # 10-task subset (checked-in job config)
 PYTHONPATH=. pier run -c examples/grok-composer-2.5-job.yaml --env-file .env
 
-# Full 113-task run on Modal (same task corpus as the leaderboard)
-modal token new
+# Full 113-task run on Docker (same task corpus as the leaderboard)
 PYTHONPATH=. pier run -c examples/grok-composer-2.5-full-job.yaml --env-file .env
 ```
 
